@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digit Sum Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔢 Digit Sum Calculator</h1>
+  <p>Enter any 10-digit number. We'll keep adding the digits until a single-digit remains.</p>
+
+  <input type="text" id="numberInput" placeholder="Enter 10-digit number" maxlength="10">
+  <br>
+  <button onclick="calculateDigitSum()">Calculate</button>
+
+  <div id="result"></div>
+
+  <script>
+    function addDigitsUntilSingle(n) {
+      while (n > 9) {
+        let total = 0;
+        while (n > 0) {
+          total += n % 10;
+          n = Math.floor(n / 10);
+        }
+        n = total;
+      }
+      return n;
+    }
+
+    function calculateDigitSum() {
+      const input = document.getElementById("numberInput").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!/^\d{10}$/.test(input)) {
+        resultDiv.innerHTML = "❌ Please enter exactly 10 digits.";
+        resultDiv.style.color = "red";
+        return;
+      }
+
+      const number = parseInt(input, 10);
+      const result = addDigitsUntilSingle(number);
+
+      resultDiv.innerHTML = `✅ The single-digit sum is: <strong>${result}</strong>`;
+      resultDiv.style.color = "green";
+    }
+  </script>
+</body>
+</html>
