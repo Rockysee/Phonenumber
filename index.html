@@ -13,9 +13,9 @@
     input, button {
       padding: 10px;
       font-size: 18px;
-      margin-top: 10px;
+      margin: 10px;
     }
-    #result {
+    #result, #birthResult {
       margin-top: 20px;
       font-size: 20px;
       color: green;
@@ -24,13 +24,20 @@
 </head>
 <body>
   <h1>🔢 Digit Sum Calculator</h1>
-  <p>Enter any 10-digit number. We'll keep adding the digits until a single-digit remains.</p>
 
+  <p>Enter any 10-digit number:</p>
   <input type="text" id="numberInput" placeholder="Enter 10-digit number" maxlength="10">
   <br>
   <button onclick="calculateDigitSum()">Calculate</button>
-
   <div id="result"></div>
+
+  <hr style="margin: 40px 0;">
+
+  <p>Or enter your birthdate (DD-MM-YYYY):</p>
+  <input type="text" id="birthInput" placeholder="e.g. 02-10-2000">
+  <br>
+  <button onclick="calculateBirthDigitSum()">Calculate Birthdate Root</button>
+  <div id="birthResult"></div>
 
   <script>
     function addDigitsUntilSingle(n) {
@@ -57,9 +64,28 @@
 
       const number = parseInt(input, 10);
       const result = addDigitsUntilSingle(number);
-
       resultDiv.innerHTML = `✅ The single-digit sum is: <strong>${result}</strong>`;
       resultDiv.style.color = "green";
+    }
+
+    function calculateBirthDigitSum() {
+      const input = document.getElementById("birthInput").value;
+      const birthResultDiv = document.getElementById("birthResult");
+
+      // Remove all non-digits (e.g. dashes, slashes)
+      const cleanInput = input.replace(/\D/g, '');
+
+      if (!/^\d{8}$/.test(cleanInput)) {
+        birthResultDiv.innerHTML = "❌ Please enter birthdate in DD-MM-YYYY format.";
+        birthResultDiv.style.color = "red";
+        return;
+      }
+
+      const number = parseInt(cleanInput, 10);
+      const result = addDigitsUntilSingle(number);
+
+      birthResultDiv.innerHTML = `🎉 Your birthdate root is: <strong>${result}</strong>`;
+      birthResultDiv.style.color = "green";
     }
   </script>
 </body>
