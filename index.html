@@ -1,43 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digit Sum Calculator</title>
   <style>
+    :root {
+      --bg-light: #f9f9f9;
+      --bg-dark: #121212;
+      --text-light: #000;
+      --text-dark: #fff;
+      --primary: teal;
+    }
+
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 40px;
-      background-color: #f9f9f9;
+      padding: 20px;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.3s, color 0.3s;
     }
+
+    body.dark-mode {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
     input, button {
-      padding: 10px;
-      font-size: 18px;
-      margin: 10px;
+      width: 90%;
+      max-width: 400px;
+      padding: 12px;
+      font-size: 1.1rem;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #006666;
+    }
+
     #result, #birthResult {
       margin-top: 20px;
-      font-size: 20px;
-      color: green;
+      font-size: 1.2rem;
+    }
+
+    .toggle-container {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .dark-mode-toggle {
+      cursor: pointer;
+      padding: 6px 12px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    hr {
+      margin: 30px 0;
     }
   </style>
 </head>
 <body>
+  <div class="toggle-container">
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
   <h1>🔢 Digit Sum Calculator</h1>
 
-  <p>Enter any 10-digit number:</p>
-  <input type="text" id="numberInput" placeholder="Enter 10-digit number" maxlength="10">
-  <br>
+  <p>Enter a 10-digit number:</p>
+  <input type="text" id="numberInput" placeholder="Enter 10-digit number" maxlength="10" />
+  <br />
   <button onclick="calculateDigitSum()">Calculate</button>
   <div id="result"></div>
 
-  <hr style="margin: 40px 0;">
+  <hr />
 
-  <p>Or enter your birthdate (DD-MM-YYYY):</p>
-  <input type="text" id="birthInput" placeholder="e.g. 02-10-2000">
-  <br>
+  <p>Or select your birthdate:</p>
+  <input type="date" id="birthInput" />
+  <br />
   <button onclick="calculateBirthDigitSum()">Calculate Birthdate Root</button>
   <div id="birthResult"></div>
+
+  <hr />
+
+  <p>Enter your email to send the result:</p>
+  <input type="email" id="emailInput" placeholder="you@example.com" />
+  <br />
+  <button onclick="sendResult()">Send Result</button>
+  <div id="emailStatus"></div>
 
   <script>
     function addDigitsUntilSingle(n) {
@@ -64,28 +131,51 @@
 
       const number = parseInt(input, 10);
       const result = addDigitsUntilSingle(number);
-      resultDiv.innerHTML = `✅ The single-digit sum is: <strong>${result}</strong>`;
+      resultDiv.innerHTML = `✅ Single-digit sum: <strong>${result}</strong>`;
       resultDiv.style.color = "green";
     }
 
     function calculateBirthDigitSum() {
-      const input = document.getElementById("birthInput").value;
+      const birthInput = document.getElementById("birthInput").value;
       const birthResultDiv = document.getElementById("birthResult");
 
-      // Remove all non-digits (e.g. dashes, slashes)
-      const cleanInput = input.replace(/\D/g, '');
-
-      if (!/^\d{8}$/.test(cleanInput)) {
-        birthResultDiv.innerHTML = "❌ Please enter birthdate in DD-MM-YYYY format.";
+      if (!birthInput) {
+        birthResultDiv.innerHTML = "❌ Please select a birthdate.";
         birthResultDiv.style.color = "red";
         return;
       }
 
-      const number = parseInt(cleanInput, 10);
+      const digitsOnly = birthInput.replace(/\D/g, "");
+      const number = parseInt(digitsOnly, 10);
       const result = addDigitsUntilSingle(number);
 
       birthResultDiv.innerHTML = `🎉 Your birthdate root is: <strong>${result}</strong>`;
       birthResultDiv.style.color = "green";
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    function sendResult() {
+      const email = document.getElementById("emailInput").value;
+      const resultText = document.getElementById("result").innerText || document.getElementById("birthResult").innerText;
+      const statusDiv = document.getElementById("emailStatus");
+
+      if (!email || !resultText) {
+        statusDiv.innerHTML = "❌ Please enter a valid email and calculate a result first.";
+        statusDiv.style.color = "red";
+        return;
+      }
+
+      // 🔧 Replace this with actual EmailJS or backend integration
+      statusDiv.innerHTML = "📧 Sending result... (Simulated)";
+      statusDiv.style.color = "gray";
+
+      setTimeout(() => {
+        statusDiv.innerHTML = `✅ Result sent to ${email} (simulated).`;
+        statusDiv.style.color = "green";
+      }, 1000);
     }
   </script>
 </body>
